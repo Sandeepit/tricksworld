@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to Tricks World</title>
+<meta charset="UTF-8">
+<meta name="keywords" content="mtips.mw.lt,magictips.tk" />
+<meta name="description" content="Full version softwares,games" />
+<style>
+body {
+background:no-repeat center center fixed; 
+-webkit-background-size: cover;
+-o-background-size: cover;
+background-size: cover;
+padding-top:15px;
+}
+*{
+margin:0;
+padding:0;
+font-family: "News Cycle", arial, sans-serif;
+}
+#main {
+width:1000px;
+margin-left:auto;
+margin-right:auto;
+}
+#logo {
+width:350px;
+height:100px;
+padding:0 20px 20px 20px;
+}
+header h2{
+color:#101CF9;
+}
+#logo,#menu_container{
+border-radius:7px;
+-webkit-border:7px;
+}
+#menu_container{
+width:1000px;
+margin-top:30px;
+}
+ul.sf-menu li{
+display:block;
+list-style:none;
+position:relative;
+}
+ul.sf-menu li a{
+display:block;
+position:relative;
+}
+ul#nav{
+width:1000px;
+background:red;
+border-radius:7px 7px 7px 7px;
+}
+ul#nav li a{
+padding:5px 20px 6px 20px;
+border-radius:7px 7px 7px 7px;
+color:#FFF;margin-right:2px;
+text-decoration:none;
+}
+#logo,#menu_container,#sidebar_container{
+background:rgba(100,100,100,0.5);
+}
+#sidebar_container{
+width:234px;
+margin:50px 0 0 20px;
+border:1px solid #323232;
+border-radius:7px 7px 7px 7px;
+}
+#sidebar_container li{
+padding:10px 0 0 20px;
+list-style: none;
+}
+ul.sf-menu li,ul#nav,#sidebar_container,#menu{
+float:left;
+}
+ul#nav,#sidebar_container,#menu{
+-webkit-box-shadow:rgba(0, 0, 0, 0.2) 0px 2px 2px;
+}
+#menu{
+width:234px;
+background:#6495ed;
+border-radius:7px 7px 0 0;
+color:#FFF;
+height:30px;
+padding-top:5px;
+}
+#data{
+padding:30px 0 0 0;
+width:718px;
+height:610px;
+margin:0 20px 15px 282px;
+}
+#data img{
+text-align:center;
+}
+#data img,h5{
+padding:100px;
+}
+h2,h3,h4{
+text-align:center;
+}
+h4{
+color:red;
+}
+#data ul{
+margin:2px 0 22px 0px;
+}
+#data ul li{
+list-style-type:none;
+background:url(images/bullet.png) no-repeat;
+margin:0 0 0 0;
+padding:0 0 4px 28px;
+line-height:1.5em;
+}
+#data ul li a{
+color:lightgreen;
+}
+h3,h2,#data ul a{
+color:gold
+}
+#data ul a{
+text-decoration:none;
+}
+#data ul a:hover{
+font-weight:bold;
+}
+#data ul a:hover{
+text-decoration:underline;
+}
+#list1{
+height:250px;
+}
+#list1,#list2{
+float:left;
+width:190px;
+padding:6px 5px 0 5px;
+border:1px solid pink;
+border-radius:7px;
+margin:10px 10px 10px 25px;
+}
+#list2{
+max-height:400px;
+overflow-x:hidden;
+}
+#menu,footer{
+text-align:center;
+}
+footer{
+height:125px;
+padding:28px 0 5px 0;
+background:#1D1D1D;
+color:#FFF;
+border-top:6px solid #75CE00;
+}
+footer p{
+line-height:1.7em;
+padding:0 0 10px 0;
+}
+footer a{
+color:#FFF;
+}
+</style>
+<script src="data/jquery-1.11.3.min.js"></script>
+<script>
+var user;
+var hid;
+var cid;
+$(document).ready(function(){
+	getData("l1");
+	$("a").hover(function(){
+		$(this).css("text-decoration", "underline");
+		$(this).css("font-weight", "bold");
+		hid = $(this).prop('id');
+	}, function(){
+		if(cid != hid)
+		$(this).css("font-weight", "normal");
+		$(this).css("text-decoration", "none");
+	});
+});
+function updateLogin(){
+user=getCookie("name");
+	if (user != ""){
+		document.getElementById("l3").innerHTML = "Log Out("+ user +")";
+		document.getElementById("l2").innerHTML = "View Profile";
+	}
+}
+function setBackground(){
+	var d = new Date();
+	if(d.getHours()<6 || d.getHours()>20)
+		document.body.style.backgroundImage = "url('images/background3.jpg')";
+	else if (d.getHours()<17)
+		document.body.style.backgroundImage = "url('images/background1.jpg')";
+	else
+		document.body.style.backgroundImage = "url('images/background2.jpg')"; 
+}
+function getData(page){
+	cid=page;
+	var x = document.getElementsByTagName("a");
+    for (var i = 0; i < x.length; i++) {
+        x[i].style.backgroundColor = "transparent";
+		x[i].style.textDecoration = "none";
+		x[i].style.fontWeight = "normal";
+    }
+	if(page.charAt(0) == "l"){
+	var y = document.getElementById(page);
+        y.style.backgroundColor = "#75CE00";
+		y.style.fontWeight = "bold";
+		}
+	user=getCookie("name");
+	if(page=="l3" && user != ""){
+		logout();
+		return;
+	}
+	$("#data").html("<img src='images/loading.gif' alt='Loading please wait...'/>");
+	var posting =$.post("data.php",{
+		pageName:page
+	});
+	posting.done(function(data){
+		if(data.substring(0,cid.length)==cid)
+		$("#data").html(data.substring(cid.length));
+	});
+	posting.fail(function(){
+	$("#data").html("<h5>Please Check Your Connection.....</h5>");
+	});
+}
+function logout(){
+	deleteCookie("user_id");
+	deleteCookie("name");
+	deleteCookie("email");
+	document.getElementById("l3").innerHTML = "Log In";
+	document.getElementById("l2").innerHTML = "Sign Up";
+	alert("You are successfully logged out");
+	getData("l1");
+}
+function validateEmail(inputField, helpText){
+	if (!validateNonEmpty(inputField, helpText))
+		return false;
+	return validateRegEx(/^[\w\.-_\+]+@[\w-]+(\.\w{2,3})+$/,inputField.value, helpText,"Please enter a valid email address.");
+}
+function validateNonEmpty(inputField, helpText){
+	return validateRegEx(/.+/,inputField.value, helpText,"Please enter a value.");
+}
+function validateRegEx(regex, input, helpText, helpMessage){
+	if (!regex.test(input)){
+		if (helpText != null)
+			helpText.innerHTML = helpMessage;
+		return false;
+	}else{
+		if (helpText != null)
+			helpText.innerHTML = "";
+		return true;
+	}
+}
+function validateEqual(password1,password2,helpText){
+	if(password1.value ==password2.value){
+		if (helpText != null)
+			helpText.innerHTML = "";
+		return true;
+	}else{
+		if (helpText != null)
+		helpText.innerHTML = "Password must match.";
+		return false;
+	}
+}
+function getCookie(cname){
+	var name = cname + "=";
+	var ca = document.cookie.split(";");
+	for(var i=0; i<ca.length; i++){
+		var c = ca[i];
+		while (c.charAt(0)==" ") c = c.substring(1);
+		if (c.indexOf(name) == 0)
+			return c.substring(name.length, c.length);
+	}
+	return "";
+}
+function deleteCookie(name){
+	cookieStr = name + "=;expires=Tue, 23 Jun 2015 06:44:32 GMT;path=/;domain=.tricksworld.net; ";
+	document.cookie = cookieStr;
+}
+</script>
+</head>
+<body onload="setBackground()">
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.5&appId=765026933626437";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+<div id="fb-root"></div>
+<div id="main"><div id="logo">
+<div style="float:left;margin-top:10px;">
+<img src="images/logo-small.gif" />
+</div>
+<div style="float:right;color:white;padding-top:10px;">
+<header>
+<h2>TricksWorld.Net</h2><br/>
+<h3>Welcome to Tricks World</h3>
+</header>
+</div>
+</div>
+<div id="menu_container">
+<nav>
+<ul class="sf-menu" id="nav">
+<li><a href="#?" onClick="getData(this.id)" id="l1">Home</a></li>
+<li><a href="#?" onClick="getData(this.id)" id="l6">Contact Us</a></li>
+<li><a href="#?" onClick="getData(this.id)" id="l2">Sign Up</a></li>
+<li><a href="#?" onClick="getData(this.id)" id="l3">Log In</a></li>
+</ul>
+</nav>
+<script>updateLogin();</script>
+<div id="sidebar_container"><div id="menu">Menu</div>
+<br/><br/><br/>
+<li>
+<div
+  class="fb-like"
+  data-href="https://www.facebook.com/tricksworld.net"
+  data-layout="button_count"
+  data-action="like"
+  data-share="true"
+  data-width="450"
+  data-show-faces="false">
+ </div></li><li>
+<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+<g:plusone href="http://TricksWorld.Net"></g:plusone>
+</li><li>
+<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://TricksWorld.Net" data-via="your_screen_name" data-lang="en">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</li><li>
+<script type="text/javascript">( function() {
+    if (window.CHITIKA === undefined) { window.CHITIKA = { 'units' : [] }; };
+    var unit = {"calltype":"async[2]","publisher":"rajkirant","width":200,"height":200,"sid":"Chitika Default"};
+    var placement_id = window.CHITIKA.units.length;
+    window.CHITIKA.units.push(unit);
+    document.write('<div id="chitikaAdBlock-' + placement_id + '"></div>');
+}());
+</script> <script type="text/javascript" src="//cdn.chitika.net/getads.js" async></script></li>
+</div>
+<div id ="data"></div>
+</div></div>
+    <footer>
+      <p><a href="https://twitter.com/TricksWorld_Net"><img src="images/twitter.png" alt="twitter" /></a>&nbsp;<a href="https://www.facebook.com/tricksworld.net"><img src="images/facebook.png" alt="facebook" /></a>&nbsp;<a href="https://plus.google.com/communities/111135313272943533312"><img src="images/gp.png" alt="rss" /></a></p>
+      <p>View In : <a href="http://m.tricksworld.net">Mobile</a></p>
+    </footer>
+</body>
+</html>
